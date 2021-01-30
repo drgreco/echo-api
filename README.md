@@ -12,6 +12,7 @@ A simple api server that echoes back whatever string a client sent through an AP
   - [ ] makefile to easily build and demonstrate your server capabilities
   - [ ] Documentation
   - [ ] SSL
+  - [ ] authentication
 
 ### Extra extra
 
