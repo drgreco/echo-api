@@ -1,3 +1,5 @@
+//+build !test
+
 package main
 
 import (
@@ -6,13 +8,12 @@ import (
     "os"
 )
 
-const (
-    HostDefault = "localhost"
-    PortDefault = "8080"
-    HealthCheckDefault = "/healthz"
-)
+// initialize some configuration for net/http
+func config() (string, string, string) {
+    HostDefault        := "localhost"
+    PortDefault        := "8080"
+    HealthCheckDefault := "/healthz"
 
-func main () {
     // get env variables if set
     Host, ok := os.LookupEnv("ECHO_HOST")
     if !ok { Host = HostDefault }
@@ -22,6 +23,12 @@ func main () {
 
     HealthCheck, ok := os.LookupEnv("ECHO_HEALTHCHECK")
     if !ok { HealthCheck = HealthCheckDefault }
+
+    return Host, Port, HealthCheck
+}
+
+func main () {
+    Host, Port, HealthCheck := config()
 
     // create handler function calls
     http.HandleFunc("/", echoRequestHandler)

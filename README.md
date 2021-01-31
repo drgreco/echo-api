@@ -51,7 +51,7 @@ PASS
 ok  	_/home/greco/src/drgreco/echo-api	0.003s
 ```
 
-Additional testing can be found [here](test/README.md)
+Additional testing can be found [here](testing/README.md)
 
 #### Configuration
 
