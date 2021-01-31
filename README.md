@@ -51,7 +51,7 @@ PASS
 ok  	_/home/greco/src/drgreco/echo-api	0.003s
 ```
 
-Additional testing can be found [here](test/README.md)
+Additional testing can be found [here](testing/README.md)
 
 #### Configuration
 
@@ -67,7 +67,7 @@ echo-api accepts three different environment variables
 
 ### Extra
 
-  - [ ] makefile to easily build and demonstrate your server capabilities
+  - [x] makefile to easily build and demonstrate your server capabilities
   - [x] Documentation
   - [ ] SSL
   - [ ] authentication
