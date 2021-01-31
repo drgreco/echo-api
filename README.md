@@ -68,6 +68,6 @@ echo-api accepts three different environment variables
 ### Extra
 
   - [ ] makefile to easily build and demonstrate your server capabilities
-  - [ ] Documentation
+  - [x] Documentation
   - [ ] SSL
   - [ ] authentication
