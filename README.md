@@ -36,6 +36,23 @@ You can also hit the `healthz` endpoint
 OK
 ```
 
+### Testing Changes
+
+Run `go test`
+
+```
+❯ go test
+2021/01/30 17:49:05  - invalid_http_method: GET
+2021/01/30 17:49:05  - 415: unsupported_media_type: application/json
+2021/01/30 17:49:05  - 400: bad_request
+2021/01/30 17:49:05  - 400: bad_request
+2021/01/30 17:49:05  - echo: success
+PASS
+ok  	_/home/greco/src/drgreco/echo-api	0.003s
+```
+
+Additional testing can be found [here](test/README.md)
+
 #### Configuration
 
 echo-api accepts three different environment variables
@@ -46,7 +63,7 @@ echo-api accepts three different environment variables
 ## Features
 
   - [x] Communicate with multiple clients simultaneously
-  - [ ] Create Unit Tests
+  - [x] Create Unit Tests
 
 ### Extra
 
@@ -54,7 +71,3 @@ echo-api accepts three different environment variables
   - [ ] Documentation
   - [ ] SSL
   - [ ] authentication
-
-### Extra extra
-
-  - [ ] dockerize

@@ -2,9 +2,9 @@ package main
 
 import (
     "fmt"
-    "os"
     "log"
     "net/http"
+    "os"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 )
 
 // Handle POST echo
-func echoRequest(w http.ResponseWriter, r *http.Request) {
+func echoRequestHandler(w http.ResponseWriter, r *http.Request) {
     // if this isn't a POST, return error and disregard
     if r.Method != http.MethodPost {
         w.WriteHeader(http.StatusMethodNotAllowed)
@@ -48,8 +48,8 @@ func echoRequest(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-// healthCheck should just return 200: OK, no logging
-func healthCheck(w http.ResponseWriter, r *http.Request) {
+// HealthCheck should just return 200: OK, no logging
+func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, "OK")
 }
 
@@ -66,8 +66,8 @@ func main () {
     if !ok { HealthCheck = HealthCheckDefault }
 
     // create handle function
-    http.HandleFunc("/", echoRequest)
-    http.HandleFunc(HealthCheck, healthCheck)
+    http.HandleFunc("/", echoRequestHandler)
+    http.HandleFunc(HealthCheck, healthCheckHandler)
 
     // launch http listener
     log.Printf("Creating server at %s:%s...", Host, Port)
