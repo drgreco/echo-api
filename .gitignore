@@ -1,3 +1,6 @@
+ssl/
+bin/
+
 # Binaries for programs and plugins
 echo-api
 *.exe
