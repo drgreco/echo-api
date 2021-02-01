@@ -91,5 +91,5 @@ echo-api accepts three different environment variables
 
   - [x] makefile to easily build and demonstrate your server capabilities
   - [x] Documentation
-  - [ ] SSL
+  - [x] SSL
   - [ ] authentication
