@@ -1,12 +1,15 @@
 package main
 
 import (
+    "encoding/base64"
     "net/http"
     "net/http/httptest"
     "net/url"
     "strings"
     "testing"
 )
+
+var BasicAuthData = make(map[string]string)
 
 func TestEchoRequestHandler(t *testing.T) {
     // create parameters for testing
@@ -25,27 +28,40 @@ func TestEchoRequestHandler(t *testing.T) {
         "GoodTest": {"POST", "application/x-www-form-urlencoded", "echo", "success", http.StatusOK, nil},
     }
 
-    // create loop for tests
+    testAuth := map[string]struct {
+        username string
+        password string
+    }{
+        "GoodCredentials": {"user", "test"},
+        "BadCredentials": {"notauthorized", "nopass"},
+    }
+
+    // create mock BasicAuthData
+    BasicAuthData[testAuth["GoodCredentials"].username] = base64.StdEncoding.EncodeToString([]byte(testAuth["GoodCredentials"].password))
+
+    // create loop for tests with good auth
     for name, test := range tests {
         t.Run(name, func(t *testing.T) {
+            credentials := testAuth["GoodCredentials"]
             data := url.Values{}
             data.Set(test.dataKey, test.dataValue)
 
             // set up valid request
             req, err := http.NewRequest(test.method, "/", strings.NewReader(data.Encode()))
             req.Header.Add("Content-Type", test.contentType)
+            // use good credentails
+            req.SetBasicAuth(credentials.username, credentials.password)
             if err != nil {
                 t.Fatal(err)
             }
 
             rr := httptest.NewRecorder()
             handler := http.HandlerFunc(echoRequestHandler)
-
             handler.ServeHTTP(rr, req)
 
             // verify status
             if status := rr.Code; status != test.statusCode {
-                t.Errorf("handler returned worng status gode: got %v want %v", status, test.statusCode)
+                t.Errorf("handler returned worng status code: got %v want %v", status, test.statusCode)
             }
 
             // verify body if status is http.StatusOK
@@ -57,6 +73,32 @@ func TestEchoRequestHandler(t *testing.T) {
             }
         })
     }
+
+    // test with bad auth
+    t.Run("BadAuth", func(t *testing.T) {
+        test := tests["GoodTest"]
+        credentials := testAuth["BadCredentials"]
+        data := url.Values{}
+        data.Set(test.dataKey, test.dataValue)
+
+         // set up a good request
+         req, err := http.NewRequest(test.method, "/", strings.NewReader(data.Encode()))
+         req.Header.Add("Content-Type", test.contentType)
+         // use bad credentails
+         req.SetBasicAuth(credentials.username, credentials.password)
+         if err != nil {
+             t.Fatal(err)
+         }
+
+         rr := httptest.NewRecorder()
+         handler := http.HandlerFunc(echoRequestHandler)
+         handler.ServeHTTP(rr, req)
+
+         // verify status
+         if status := rr.Code; status != http.StatusUnauthorized {
+             t.Errorf("handler returned worng status code: got %v want %v", status, http.StatusUnauthorized)
+         }
+    })
 }
 
 func TestHealthCheckHandler(t *testing.T) {
@@ -73,7 +115,7 @@ func TestHealthCheckHandler(t *testing.T) {
 
     // verify status
     if status := rr.Code; status != http.StatusOK {
-        t.Errorf("handler returned worng status gode: got %v want %v", status, http.StatusOK)
+        t.Errorf("handler returned worng status code: got %v want %v", status, http.StatusOK)
     }
 
     // verify body
