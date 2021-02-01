@@ -32,7 +32,7 @@ Note that the `healthz` endpoint does not require basic auth.
 2021/01/30 15:58:55 Creating server at localhost:8443...
 ```
 
-## Testing Changes
+### Testing Changes
 
 Run `go test`
 
