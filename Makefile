@@ -4,7 +4,7 @@
 BIN_FILE=bin/echo-api
 
 build:
-	go build -o ${BIN_FILE} main.go handlers.go
+	go build -o ${BIN_FILE} main.go handlers.go 
 
 create-certs:
 	mkdir --parents ssl && \

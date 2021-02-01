@@ -7,9 +7,17 @@ A simple api server that echoes back whatever string a client sent through an AP
 Post `application/x-www-form-urlencoded` data to the endpoint with a key of `echo` and any string for the value, and you will get a response of the value posted.
 
 ```
-❯ curl https://localhost:8443/ --insecure --data "echo=hello" 
+❯ curl https://localhost:8443/ --insecure --user "user:test" --data "echo=hello" 
 hello
 ```
+
+You can also hit the `healthz` endpoint
+```
+❯ curl https://localhost:8443/healthz --insecure
+OK
+```
+
+Note that the `healthz` endpoint does not require basic auth.
 
 ### Build
 
@@ -24,19 +32,7 @@ hello
 2021/01/30 15:58:55 Creating server at localhost:8443...
 ```
 
-
-To make requests, you can do some thing like this:
-```
-❯ curl https://localhost:8443/ --insecure --data "echo=hello"
-```
-
-You can also hit the `healthz` endpoint
-```
-❯ curl https://localhost:8443/healthz --insecure
-OK
-```
-
-### Testing Changes
+## Testing Changes
 
 Run `go test`
 
@@ -82,6 +78,17 @@ echo-api accepts three different environment variables
  - `ECHO_SERVERPRIVATEKEY` path to tls private key. defaults to `ssl/server.key`
  - `ECHO_SERVERCERTIFICATE` path to tls certificate. defaults to `ssl/server.crt`
  - `ECHO_TLS_DISABLE` disables TLS. Only accepts strings `true` or `false`. defaults to `false`.
+ - `ECHO_BASIC_AUTH_FILE` file to find basic auth information. defaults to `auth.db`.
+
+#### Basic Auth
+
+Basic Auth is handled by default in a file named `auth.db`. This file looks like this:
+```
+user:dGVzdA==
+bob:bGV0bWVpbg==
+```
+
+The format is `[user]:[base64encoded password]
 
 ## Features
 
@@ -93,4 +100,4 @@ echo-api accepts three different environment variables
   - [x] makefile to easily build and demonstrate your server capabilities
   - [x] Documentation
   - [x] SSL
-  - [ ] authentication
+  - [x] authentication
