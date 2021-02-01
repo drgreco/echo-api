@@ -7,7 +7,7 @@ A simple api server that echoes back whatever string a client sent through an AP
 Post `application/x-www-form-urlencoded` data to the endpoint with a key of `echo` and any string for the value, and you will get a response of the value posted.
 
 ```
-❯ curl localhost:8080/ -d "echo=hello"                                                                                             ─╯
+❯ curl https://localhost:8443/ --insecure --data "echo=hello" 
 hello
 ```
 
@@ -21,18 +21,18 @@ hello
 
 ```
 ❯ ./echo-api
-2021/01/30 15:58:55 Creating server at localhost:8080...
+2021/01/30 15:58:55 Creating server at localhost:8443...
 ```
 
 
 To make requests, you can do some thing like this:
 ```
-❯ curl localhost:8080 -d "echo=hello" 
+❯ curl https://localhost:8443/ --insecure --data "echo=hello"
 ```
 
 You can also hit the `healthz` endpoint
 ```
-❯ curl localhost:8080/healthz                                                                                                      ─╯
+❯ curl https://localhost:8443/healthz --insecure
 OK
 ```
 
@@ -53,12 +53,34 @@ ok  	_/home/greco/src/drgreco/echo-api	0.003s
 
 Additional testing can be found [here](testing/README.md)
 
+### Makefile targets
+
+`Makefile` options:
+| argument       | description |
+|----------------|----------------|
+| build          | creates executable at `bin/echo-api`         |
+| create-certs   | creates certificates for testing in `ssl/`   |
+| clean-certs    | deletes directory `ssl/`                     |
+| recreate-certs | runs `clean-certs` then `create-certs`       |
+| run            | runs without creating executable: `go run .` |
+| start          | runs `build`, then executes `bin/echo-api`   |
+| test           | runs tests: `go test -cover -tags test `     |
+| lint           | runs golint                                  |
+| clean          | deletes directory `bin/`                     |
+| test-build     | runs the arguments `test` then `build`       |
+| all            | runs the arguments `test-build` then `start  |
+
+
+Defaults to `all`
+
 #### Configuration
 
 echo-api accepts three different environment variables
  - `ECHO_HOST` for the ip to listen on. defaults to `localhost`
- - `ECHO_PORT` for the port to listen on. defaults to `8080`
+ - `ECHO_PORT` for the port to listen on. defaults to `8443`
  - `ECHO_HEALTHCHECK` where to listen for a healthcheck. requires leading `/`. defaults to `/healthz`
+ - `ECHO_SERVERPRIVATEKEY` path to tls private key. defaults to `ssl/server.key`
+ - `ECHO_SERVERCERTIFICATE` path to tls certificate. defaults to `ssl/server.crt`
 
 ## Features
 
