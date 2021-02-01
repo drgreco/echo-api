@@ -55,7 +55,7 @@ Additional testing can be found [here](testing/README.md)
 
 ### Makefile targets
 
-`Makefile` options:
+`Makefile` targets:
 | argument       | description |
 |----------------|----------------|
 | build          | creates executable at `bin/echo-api`         |
@@ -81,6 +81,7 @@ echo-api accepts three different environment variables
  - `ECHO_HEALTHCHECK` where to listen for a healthcheck. requires leading `/`. defaults to `/healthz`
  - `ECHO_SERVERPRIVATEKEY` path to tls private key. defaults to `ssl/server.key`
  - `ECHO_SERVERCERTIFICATE` path to tls certificate. defaults to `ssl/server.crt`
+ - `ECHO_TLS_DISABLE` disables TLS. Only accepts strings `true` or `false`. defaults to `false`.
 
 ## Features
 

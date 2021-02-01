@@ -16,6 +16,7 @@ func config() (map[string]string) {
     config["HealthCheck"]       = "/healthz"
     config["ServerPrivateKey"]  = "ssl/server.key"
     config["ServerCertificate"] = "ssl/server.crt"
+    config["TlsDisable"]        = "false"
 
     // get env variables if set
     Host, ok := os.LookupEnv("ECHO_HOST")
@@ -33,6 +34,9 @@ func config() (map[string]string) {
     ServerCertificate, ok := os.LookupEnv("ECHO_SERVERCERTIFICATE")
     if ok { config["ServerCertificate"] = ServerCertificate }
 
+    TlsDisable, ok := os.LookupEnv("ECHO_TLS_DISABLE")
+    if ok { config["TlsDisable"] = TlsDisable}
+
     return config
 }
 
@@ -44,6 +48,12 @@ func main () {
     http.HandleFunc(config["HealthCheck"], healthCheckHandler)
 
     // launch http listener
-    log.Printf("Creating server at %s:%s...", config["Host"], config["Port"])
-    log.Fatal(http.ListenAndServeTLS(config["Host"]+":"+config["Port"], config["ServerCertificate"], config["ServerPrivateKey"], nil))
+    // check if we want TLS or not
+    if config["TlsDisable"] == "true" {
+        log.Printf("Creating http server at %s:%s...", config["Host"], config["Port"])
+        log.Fatal(http.ListenAndServe(config["Host"]+":"+config["Port"], nil))
+    } else {
+        log.Printf("Creating TLS server at %s:%s...", config["Host"], config["Port"])
+        log.Fatal(http.ListenAndServeTLS(config["Host"]+":"+config["Port"], config["ServerCertificate"], config["ServerPrivateKey"], nil))
+    }
 }
